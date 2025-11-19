@@ -92,6 +92,7 @@ export interface Translation {
   // Personal Info Fields
   photo: string;
   uploadPhoto: string;
+  removePhoto: string;
   uploadPhotoHint: string;
   fullName: string;
   jobTitle: string;
@@ -375,6 +376,7 @@ export const translations: Record<Language, Translation> = {
     
     photo: "Ảnh đại diện",
     uploadPhoto: "Tải ảnh lên",
+    removePhoto: "Xóa ảnh",
     uploadPhotoHint: "Định dạng: JPG, PNG. Kích thước tối đa: 5MB",
     fullName: "Họ và tên",
     jobTitle: "Vị trí ứng tuyển",
@@ -636,6 +638,7 @@ export const translations: Record<Language, Translation> = {
     
     photo: "Profile Photo",
     uploadPhoto: "Upload Photo",
+    removePhoto: "Remove Photo",
     uploadPhotoHint: "Format: JPG, PNG. Max size: 5MB",
     fullName: "Full Name",
     jobTitle: "Job Title",
@@ -897,6 +900,7 @@ export const translations: Record<Language, Translation> = {
     
     photo: "个人照片",
     uploadPhoto: "上传照片",
+    removePhoto: "删除照片",
     uploadPhotoHint: "格式：JPG、PNG。最大大小：5MB",
     fullName: "姓名",
     jobTitle: "职位",
@@ -1158,6 +1162,7 @@ export const translations: Record<Language, Translation> = {
     
     photo: "プロフィール写真",
     uploadPhoto: "写真をアップロード",
+    removePhoto: "写真を削除",
     uploadPhotoHint: "形式：JPG、PNG。最大サイズ：5MB",
     fullName: "氏名",
     jobTitle: "職種",
@@ -1419,6 +1424,7 @@ export const translations: Record<Language, Translation> = {
     
     photo: "Foto de Perfil",
     uploadPhoto: "Subir Foto",
+    removePhoto: "Eliminar Foto",
     uploadPhotoHint: "Formato: JPG, PNG. Tamaño máximo: 5MB",
     fullName: "Nombre Completo",
     jobTitle: "Título del Trabajo",

@@ -306,16 +306,79 @@ export function CVForm({ onSubmit, initialData, onRestrictedAccess }: CVFormProp
                 />
               )}
               <div className="flex-1">
-                <label className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg cursor-pointer hover:bg-blue-100 transition-colors w-fit">
-                  <Upload size={18} />
-                  <span>{t.uploadPhoto}</span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handlePhotoUpload}
-                    className="hidden"
-                  />
-                </label>
+                <div className="flex items-center gap-2">
+                  <label className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg cursor-pointer hover:bg-blue-100 transition-colors w-fit">
+                    <Upload size={18} />
+                    <span>{t.uploadPhoto}</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handlePhotoUpload}
+                      className="hidden"
+                    />
+                  </label>
+                  {formData.personalInfo.photo && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={async () => {
+                        const photoUrl = formData.personalInfo.photo;
+                        
+                        // Check if photo is from backend (not base64)
+                        const isBackendImage = photoUrl && !photoUrl.startsWith('data:') && accessToken;
+                        
+                        if (isBackendImage) {
+                          try {
+                            // Extract filename from URL
+                            // Handles: "/uploads/cv/image-123.jpg", "http://localhost:4000/uploads/cv/image-123.jpg", etc.
+                            let filename = photoUrl;
+                            
+                            // Remove API base URL prefix if present
+                            const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:4000';
+                            if (filename.startsWith(API_BASE_URL)) {
+                              filename = filename.replace(API_BASE_URL, '');
+                            }
+                            
+                            // Remove /uploads/cv/ prefix if present
+                            if (filename.startsWith('/uploads/cv/')) {
+                              filename = filename.replace('/uploads/cv/', '');
+                            } else if (filename.startsWith('uploads/cv/')) {
+                              filename = filename.replace('uploads/cv/', '');
+                            }
+                            
+                            // Extract just the filename (last part after /)
+                            if (filename.includes('/')) {
+                              filename = filename.split('/').pop() || filename;
+                            }
+                            
+                            // Delete from backend
+                            await cvApi.deleteImage(accessToken, filename);
+                          } catch (error) {
+                            // Log error but continue with removal from form
+                            console.error('Failed to delete image from server:', error);
+                            // Still remove from form even if backend deletion fails
+                          }
+                        }
+                        
+                        // Remove from form data
+                        setFormData({
+                          ...formData,
+                          personalInfo: {
+                            ...formData.personalInfo,
+                            photo: "",
+                          },
+                        });
+                        
+                        toast.success(isBackendImage ? "Photo removed from server" : "Photo removed");
+                      }}
+                      className="gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
+                    >
+                      <Trash2 size={16} />
+                      <span>{t.removePhoto}</span>
+                    </Button>
+                  )}
+                </div>
                 <p className="text-sm text-gray-500 mt-2">{t.uploadPhotoHint}</p>
               </div>
             </div>

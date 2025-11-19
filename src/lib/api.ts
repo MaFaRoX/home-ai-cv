@@ -257,6 +257,13 @@ export const cvApi = {
 
     return response.json();
   },
+
+  deleteImage: (accessToken: string, filename: string) =>
+    apiRequest<{ message: string }, { filename: string }>('/api/cvs/delete-image', {
+      method: 'DELETE',
+      body: { filename },
+      token: accessToken,
+    }),
 };
 
 // Subscription API
@@ -279,7 +286,7 @@ export const subscriptionApi = {
     paymentMethod?: string,
   ) =>
     apiRequest<
-      { subscription: Subscription },
+      { subscription: Subscription; extended?: boolean },
       { appSlug: string; planSlug: string; durationDays: number; paymentMethod?: string }
     >('/api/subscriptions', {
       method: 'POST',

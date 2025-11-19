@@ -1,15 +1,13 @@
 "use client";
 
-import { useState, createContext, useContext, useEffect, useCallback } from "react";
+import { useState, createContext, useContext, useEffect, useCallback, useRef } from "react";
 import { CVForm } from "./components/CVForm";
 import { TemplateSelector } from "./components/TemplateSelector";
 import { TutorialDialog } from "./components/TutorialDialog";
-import { AnalyticsProvider, useAnalytics } from "./components/AnalyticsContext";
-import { ShareAnalyticsDialog } from "./components/ShareAnalyticsDialog";
 import { AuthProvider, useAuth } from "./components/AuthContext";
 import { AuthDialog } from "./components/AuthDialog";
 import { PremiumDialog } from "./components/PremiumDialog";
-import { FileText, ArrowLeft, Eye, Edit, Globe, Download, Upload, HelpCircle, Share2, Facebook, Twitter, Linkedin, Mail, Link as LinkIcon, TrendingUp, LogOut, Star, Check } from "lucide-react";
+import { FileText, ArrowLeft, Eye, Edit, Globe, Download, Upload, HelpCircle, Share2, Facebook, Twitter, Linkedin, Mail, Link as LinkIcon, LogOut, Star, Check } from "lucide-react";
 import { Button } from "./components/ui/button";
 import { Language, translations, languageNames } from "./locales/translations";
 import {
@@ -191,33 +189,12 @@ const SAMPLE_CV_DATA: CVData = {
   ],
 };
 
-// Helper function to detect browser language
-const detectBrowserLanguage = (): Language => {
-  // Check if we're in the browser (not during SSR)
-  if (typeof window === 'undefined' || typeof navigator === 'undefined') {
-    return 'en'; // Default during SSR
-  }
-  const browserLang = navigator.language.toLowerCase();
-  if (browserLang.startsWith('vi')) return 'vi';
-  if (browserLang.startsWith('zh')) return 'zh';
-  if (browserLang.startsWith('ja')) return 'ja';
-  if (browserLang.startsWith('es')) return 'es';
-  return 'en'; // Default to English
-};
-
 const APP_SLUG = 'cv-online';
 
 function AppContent() {
-  const { trackShare } = useAnalytics();
   const { isAuthenticated, isPremium, premiumDaysRemaining, signOut, accessToken } = useAuth();
-  const [language, setLanguage] = useState<Language>(() => {
-    // Check if we're in the browser before accessing localStorage
-    if (typeof window === 'undefined') {
-      return 'en'; // Default during SSR
-    }
-    const savedLang = localStorage.getItem("cv-maker-language");
-    return savedLang ? (savedLang as Language) : detectBrowserLanguage();
-  });
+  // Always start with 'en' to prevent hydration mismatch
+  const [language, setLanguage] = useState<Language>('en');
   const [step, setStep] = useState<"form" | "preview">("form");
   const [cvData, setCVData] = useState<CVData | null>(null);
   const [currentCV, setCurrentCV] = useState<CV | null>(null);
@@ -225,16 +202,30 @@ function AppContent() {
   const [loading, setLoading] = useState(false);
   const [viewMode, setViewMode] = useState<"create" | "demo">("create");
   const [showTutorialDialog, setShowTutorialDialog] = useState(false);
-  const [showAnalyticsDialog, setShowAnalyticsDialog] = useState(false);
   const [showAuthDialog, setShowAuthDialog] = useState(false);
   const [authDialogReason, setAuthDialogReason] = useState<"manual" | "restriction">("manual");
   const [showPremiumDialog, setShowPremiumDialog] = useState(false);
+  
+  // Track if we've loaded from localStorage to prevent overwriting on initial mount
+  const hasLoadedFromStorage = useRef(false);
 
   const t = translations[language];
 
-  // Save language preference
+  // Load language from localStorage after mount to prevent hydration mismatch
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && !hasLoadedFromStorage.current) {
+      const savedLang = localStorage.getItem("cv-maker-language");
+      const validLanguages: Language[] = ['vi', 'en', 'zh', 'ja', 'es'];
+      if (savedLang && validLanguages.includes(savedLang as Language)) {
+        setLanguage(savedLang as Language);
+      }
+      hasLoadedFromStorage.current = true;
+    }
+  }, []);
+
+  // Save language preference (only after initial load to prevent overwriting)
+  useEffect(() => {
+    if (typeof window !== 'undefined' && hasLoadedFromStorage.current) {
       localStorage.setItem("cv-maker-language", language);
     }
   }, [language]);
@@ -444,7 +435,6 @@ function AppContent() {
                       <DropdownMenuContent align="end" className="w-52">
                         <DropdownMenuItem
                           onClick={() => {
-                            trackShare('facebook');
                             const url = window.location.href;
                             const text = t.appName + " - " + t.appTagline;
                             window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(text)}`, '_blank');
@@ -456,7 +446,6 @@ function AppContent() {
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => {
-                            trackShare('twitter');
                             const url = window.location.href;
                             const text = t.appName + " - " + t.appTagline;
                             window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
@@ -468,7 +457,6 @@ function AppContent() {
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => {
-                            trackShare('linkedin');
                             const url = window.location.href;
                             const text = t.appName + " - " + t.appTagline;
                             window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank');
@@ -480,7 +468,6 @@ function AppContent() {
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => {
-                            trackShare('whatsapp');
                             const url = window.location.href;
                             const text = t.appName + " - " + t.appTagline;
                             window.open(`https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`, '_blank');
@@ -494,7 +481,6 @@ function AppContent() {
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => {
-                            trackShare('email');
                             const url = window.location.href;
                             const subject = t.appName;
                             const body = t.appTagline + '\n\n' + url;
@@ -508,7 +494,6 @@ function AppContent() {
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                           onClick={() => {
-                            trackShare('copylink');
                             const url = window.location.href;
                             navigator.clipboard.writeText(url).then(() => {
                               toast.success(t.linkCopied);
@@ -518,14 +503,6 @@ function AppContent() {
                         >
                           <LinkIcon size={16} className="text-purple-600" />
                           <span>{t.copyLink}</span>
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                          onClick={() => setShowAnalyticsDialog(true)}
-                          className="gap-2 cursor-pointer"
-                        >
-                          <TrendingUp size={16} className="text-green-600" />
-                          <span>{t.viewAnalytics}</span>
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -690,10 +667,6 @@ function AppContent() {
           open={showTutorialDialog} 
           onOpenChange={setShowTutorialDialog}
         />
-        <ShareAnalyticsDialog 
-          open={showAnalyticsDialog} 
-          onOpenChange={setShowAnalyticsDialog}
-        />
         <AuthDialog 
           open={showAuthDialog} 
           onOpenChange={setShowAuthDialog}
@@ -709,13 +682,11 @@ function AppContent() {
   );
 }
 
-// Wrapper with Auth and Analytics Providers
+// Wrapper with Auth Provider
 export default function App() {
   return (
     <AuthProvider>
-      <AnalyticsProvider>
-        <AppContent />
-      </AnalyticsProvider>
+      <AppContent />
     </AuthProvider>
   );
 }

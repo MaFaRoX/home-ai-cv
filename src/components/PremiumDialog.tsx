@@ -29,10 +29,14 @@ export function PremiumDialog({ open, onOpenChange }: PremiumDialogProps) {
     t.premiumFeatureCustomizeColors || "Tùy chỉnh màu sắc",
   ];
 
-  const handlePurchase = (days: number) => {
-    upgradeToPremium(days);
-    toast.success(t.premiumUpgradeSuccess || "Nâng cấp Premium thành công!");
-    onOpenChange(false);
+  const handlePurchase = async (days: number) => {
+    try {
+      await upgradeToPremium(days);
+      // The toast message is now handled in AuthContext with extension info
+      onOpenChange(false);
+    } catch (error) {
+      // Error handling is done in AuthContext
+    }
   };
 
   return (

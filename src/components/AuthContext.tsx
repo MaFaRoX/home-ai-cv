@@ -199,6 +199,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     refreshTokenRef.current = null;
     setIsPremium(false);
     setPremiumDaysRemaining(0);
+    
+    // Refresh the page after sign out
+    if (typeof window !== 'undefined') {
+      window.location.reload();
+    }
   };
 
   const upgradeToPremium = async (days: number) => {
@@ -208,9 +213,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      await subscriptionApi.createSubscription(accessToken, APP_SLUG, 'premium', days, 'free');
+      const response = await subscriptionApi.createSubscription(accessToken, APP_SLUG, 'premium', days, 'free');
       await checkSubscription(accessToken);
-      toast.success('Premium subscription activated!');
+      
+      // Show different message based on whether subscription was extended
+      if (response.extended) {
+        const period = days === 30 ? '1 month' : days === 365 ? '1 year' : `${days} days`;
+        toast.success(`Premium subscription extended by ${period}! Your subscription duration has been updated.`);
+      } else {
+        toast.success('Premium subscription activated!');
+      }
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to upgrade to premium';
       toast.error(message);
