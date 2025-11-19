@@ -235,35 +235,6 @@ export const cvApi = {
 
   getSharedCV: (shareToken: string) =>
     apiRequest<{ cv: CV }>(`/api/cvs/shared/${shareToken}`),
-
-  uploadImage: async (accessToken: string, file: File): Promise<{ url: string; filename: string; size: number; mimetype: string }> => {
-    const formData = new FormData();
-    formData.append('image', file);
-
-    const response = await fetch(`${API_BASE_URL}/api/cvs/upload-image`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-      body: formData,
-      credentials: 'include',
-    });
-
-    if (!response.ok) {
-      const data = await response.json().catch(() => undefined);
-      const message = (data && data.message) || 'Upload failed';
-      throw new Error(message);
-    }
-
-    return response.json();
-  },
-
-  deleteImage: (accessToken: string, filename: string) =>
-    apiRequest<{ message: string }, { filename: string }>('/api/cvs/delete-image', {
-      method: 'DELETE',
-      body: { filename },
-      token: accessToken,
-    }),
 };
 
 // Subscription API

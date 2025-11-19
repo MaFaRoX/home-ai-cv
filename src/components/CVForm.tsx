@@ -8,7 +8,6 @@ import { Plus, Trash2, Upload, User, Briefcase, GraduationCap, Award, Languages,
 import { CVData, useLanguage } from "../App";
 import { Switch } from "./ui/switch";
 import { useAuth } from "./AuthContext";
-import { cvApi } from "../lib/api";
 import { toast } from "sonner";
 interface CVFormProps {
   onSubmit: (data: CVData) => void;
@@ -86,8 +85,6 @@ export function CVForm({ onSubmit, initialData, onRestrictedAccess }: CVFormProp
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const isGuest = !accessToken;
-
     // Validate file size (5MB)
     if (file.size > 5 * 1024 * 1024) {
       toast.error("Image size must be less than 5MB");
@@ -103,24 +100,15 @@ export function CVForm({ onSubmit, initialData, onRestrictedAccess }: CVFormProp
 
     try {
       // Show loading state
-      const loadingToast = toast.loading(isGuest ? "Processing image..." : "Uploading image...");
+      const loadingToast = toast.loading("Processing image...");
       
-      let photoUrl: string;
-      
-      if (isGuest) {
-        // For guests, convert to base64 data URL
-        const reader = new FileReader();
-        photoUrl = await new Promise<string>((resolve, reject) => {
-          reader.onload = () => resolve(reader.result as string);
-          reader.onerror = reject;
-          reader.readAsDataURL(file);
-        });
-      } else {
-        // For authenticated users, upload to backend
-        const result = await cvApi.uploadImage(accessToken, file);
-        const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:4000';
-        photoUrl = result.url.startsWith('http') ? result.url : `${API_BASE_URL}${result.url}`;
-      }
+      // Convert to base64 data URL (works for both guests and authenticated users)
+      const reader = new FileReader();
+      const photoUrl = await new Promise<string>((resolve, reject) => {
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
       
       // Update form data with URL
       setFormData({
@@ -132,7 +120,7 @@ export function CVForm({ onSubmit, initialData, onRestrictedAccess }: CVFormProp
       });
       
       toast.dismiss(loadingToast);
-      toast.success(isGuest ? "Image added successfully" : "Image uploaded successfully");
+      toast.success("Image added successfully");
     } catch (error) {
       const message = error instanceof Error ? error.message : "Failed to process image";
       toast.error(message);
@@ -322,45 +310,7 @@ export function CVForm({ onSubmit, initialData, onRestrictedAccess }: CVFormProp
                       type="button"
                       variant="outline"
                       size="sm"
-                      onClick={async () => {
-                        const photoUrl = formData.personalInfo.photo;
-                        
-                        // Check if photo is from backend (not base64)
-                        const isBackendImage = photoUrl && !photoUrl.startsWith('data:') && accessToken;
-                        
-                        if (isBackendImage) {
-                          try {
-                            // Extract filename from URL
-                            // Handles: "/uploads/cv/image-123.jpg", "http://localhost:4000/uploads/cv/image-123.jpg", etc.
-                            let filename = photoUrl;
-                            
-                            // Remove API base URL prefix if present
-                            const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:4000';
-                            if (filename.startsWith(API_BASE_URL)) {
-                              filename = filename.replace(API_BASE_URL, '');
-                            }
-                            
-                            // Remove /uploads/cv/ prefix if present
-                            if (filename.startsWith('/uploads/cv/')) {
-                              filename = filename.replace('/uploads/cv/', '');
-                            } else if (filename.startsWith('uploads/cv/')) {
-                              filename = filename.replace('uploads/cv/', '');
-                            }
-                            
-                            // Extract just the filename (last part after /)
-                            if (filename.includes('/')) {
-                              filename = filename.split('/').pop() || filename;
-                            }
-                            
-                            // Delete from backend
-                            await cvApi.deleteImage(accessToken, filename);
-                          } catch (error) {
-                            // Log error but continue with removal from form
-                            console.error('Failed to delete image from server:', error);
-                            // Still remove from form even if backend deletion fails
-                          }
-                        }
-                        
+                      onClick={() => {
                         // Remove from form data
                         setFormData({
                           ...formData,
@@ -370,7 +320,7 @@ export function CVForm({ onSubmit, initialData, onRestrictedAccess }: CVFormProp
                           },
                         });
                         
-                        toast.success(isBackendImage ? "Photo removed from server" : "Photo removed");
+                        toast.success("Photo removed");
                       }}
                       className="gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
                     >
