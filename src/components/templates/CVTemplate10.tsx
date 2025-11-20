@@ -22,14 +22,22 @@ export function CVTemplate10({ cvData, customColor = "#fbbf24" }: CVTemplate10Pr
       className="mx-auto text-white" 
       style={{ 
         width: '210mm', 
-        height: '297mm', 
-        overflow: 'hidden',
-        background: 'linear-gradient(135deg, rgb(10, 10, 10) 0%, rgb(20, 20, 20) 100%)'
+        minHeight: '297mm',
+        background: 'linear-gradient(135deg, rgb(10, 10, 10) 0%, rgb(20, 20, 20) 100%)',
+        pageBreakInside: 'avoid',
+        breakInside: 'avoid'
       }}
     >
-      <div className="flex h-full">
+      <div className="flex">
         {/* Left Sidebar - Darker */}
-        <div className="w-[35%] p-6" style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)' }}>
+        <div 
+          className="w-[35%] p-6" 
+          style={{ 
+            backgroundColor: 'rgba(0, 0, 0, 0.6)',
+            pageBreakInside: 'avoid',
+            breakInside: 'avoid'
+          }}
+        >
           {/* Photo */}
           {cvData.personalInfo.photo && (
             <div className="mb-6 flex justify-center">
@@ -251,7 +259,15 @@ export function CVTemplate10({ cvData, customColor = "#fbbf24" }: CVTemplate10Pr
               </h2>
               <div className="space-y-4">
                 {cvData.workExperience.filter(w => w.position).map((work, index) => (
-                  <div key={index} className="relative pl-4" style={{ borderLeft: `2px solid ${colors.primary}40` }}>
+                  <div 
+                    key={index} 
+                    className="relative pl-4" 
+                    style={{ 
+                      borderLeft: `2px solid ${colors.primary}40`,
+                      pageBreakInside: 'avoid',
+                      breakInside: 'avoid'
+                    }}
+                  >
                     <div 
                       className="absolute left-0 top-1 w-2 h-2 rounded-full"
                       style={{ 
@@ -297,7 +313,15 @@ export function CVTemplate10({ cvData, customColor = "#fbbf24" }: CVTemplate10Pr
               </h2>
               <div className="space-y-3">
                 {cvData.education.filter(e => e.degree).map((edu, index) => (
-                  <div key={index} className="relative pl-4" style={{ borderLeft: `2px solid ${colors.primary}40` }}>
+                  <div 
+                    key={index} 
+                    className="relative pl-4" 
+                    style={{ 
+                      borderLeft: `2px solid ${colors.primary}40`,
+                      pageBreakInside: 'avoid',
+                      breakInside: 'avoid'
+                    }}
+                  >
                     <div 
                       className="absolute left-0 top-1 w-2 h-2 rounded-full"
                       style={{ 

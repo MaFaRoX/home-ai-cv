@@ -18,9 +18,24 @@ export function CVTemplate1({ cvData, customColor = "#2563eb" }: CVTemplate1Prop
   };
 
   return (
-    <div className="bg-white mx-auto" style={{ width: '210mm', height: '297mm', overflow: 'hidden' }}>
+    <div 
+      className="bg-white mx-auto" 
+      style={{ 
+        width: '210mm', 
+        minHeight: '297mm',
+        pageBreakInside: 'avoid',
+        breakInside: 'avoid'
+      }}
+    >
       {/* Header */}
-      <div className="text-white px-6 py-5" style={{ background: colors.gradient }}>
+      <div 
+        className="text-white px-6 py-5" 
+        style={{ 
+          background: colors.gradient,
+          pageBreakAfter: 'avoid',
+          breakAfter: 'avoid'
+        }}
+      >
         <div className="flex items-center gap-4">
           {cvData.personalInfo.photo && (
             <img
@@ -80,12 +95,12 @@ export function CVTemplate1({ cvData, customColor = "#2563eb" }: CVTemplate1Prop
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 px-6 py-5" style={{ height: 'calc(297mm - 130px)' }}>
+      <div className="grid grid-cols-3 gap-4 px-6 py-5">
         {/* Left Column - Main Content */}
-        <div className="col-span-2 space-y-4 overflow-hidden">
+        <div className="col-span-2 space-y-4">
           {/* Profile */}
           {cvData.profile && (
-            <section>
+            <section style={{ pageBreakInside: 'avoid', breakInside: 'avoid' }}>
               <h2 className="text-lg pb-1 mb-2" style={{ borderBottom: `2px solid ${colors.primary}` }}>{t.profile}</h2>
               <p className="text-gray-700 leading-snug text-xs">{cvData.profile}</p>
             </section>
@@ -102,7 +117,15 @@ export function CVTemplate1({ cvData, customColor = "#2563eb" }: CVTemplate1Prop
                 {cvData.workExperience
                   .filter((exp) => exp.position || exp.company)
                   .map((job, index) => (
-                    <div key={index} className="relative pl-3" style={{ borderLeft: `2px solid ${colors.primaryLight}` }}>
+                    <div 
+                      key={index} 
+                      className="relative pl-3" 
+                      style={{ 
+                        borderLeft: `2px solid ${colors.primaryLight}`,
+                        pageBreakInside: 'avoid',
+                        breakInside: 'avoid'
+                      }}
+                    >
                       <div className="absolute w-2 h-2 rounded-full -left-[5px] top-1" style={{ background: colors.primary }}></div>
                       <div className="mb-1">
                         <h3 className="text-sm" style={{ color: colors.primaryDark }}>{job.position}</h3>
@@ -134,7 +157,15 @@ export function CVTemplate1({ cvData, customColor = "#2563eb" }: CVTemplate1Prop
                 {cvData.education
                   .filter((edu) => edu.degree || edu.school)
                   .map((edu, index) => (
-                    <div key={index} className="relative pl-3" style={{ borderLeft: `2px solid ${colors.primaryLight}` }}>
+                    <div 
+                      key={index} 
+                      className="relative pl-3" 
+                      style={{ 
+                        borderLeft: `2px solid ${colors.primaryLight}`,
+                        pageBreakInside: 'avoid',
+                        breakInside: 'avoid'
+                      }}
+                    >
                       <div className="absolute w-2 h-2 rounded-full -left-[5px] top-1" style={{ background: colors.primary }}></div>
                       <h3 className="text-sm" style={{ color: colors.primaryDark }}>{edu.degree}</h3>
                       <p className="text-gray-700 text-xs">{edu.school}</p>
@@ -150,10 +181,10 @@ export function CVTemplate1({ cvData, customColor = "#2563eb" }: CVTemplate1Prop
         </div>
 
         {/* Right Column - Sidebar */}
-        <div className="space-y-4 overflow-hidden">
+        <div className="space-y-4">
           {/* Technical Skills */}
           {cvData.skills.technical.some((skill) => skill) && (
-            <section>
+            <section style={{ pageBreakInside: 'avoid', breakInside: 'avoid' }}>
               <h2 className="text-sm pb-1 mb-2" style={{ borderBottom: `2px solid ${colors.primary}` }}>{t.technicalSkills}</h2>
               <div className="flex flex-wrap gap-1">
                 {cvData.skills.technical
@@ -169,7 +200,7 @@ export function CVTemplate1({ cvData, customColor = "#2563eb" }: CVTemplate1Prop
 
           {/* Soft Skills */}
           {cvData.skills.soft.some((skill) => skill) && (
-            <section>
+            <section style={{ pageBreakInside: 'avoid', breakInside: 'avoid' }}>
               <h2 className="text-sm pb-1 mb-2" style={{ borderBottom: `2px solid ${colors.primary}` }}>{t.softSkills}</h2>
               <ul className="space-y-0.5">
                 {cvData.skills.soft
@@ -186,7 +217,7 @@ export function CVTemplate1({ cvData, customColor = "#2563eb" }: CVTemplate1Prop
 
           {/* Languages */}
           {cvData.languages.some((lang) => lang.name) && (
-            <section>
+            <section style={{ pageBreakInside: 'avoid', breakInside: 'avoid' }}>
               <h2 className="text-sm pb-1 mb-2 flex items-center gap-1" style={{ borderBottom: `2px solid ${colors.primary}` }}>
                 <Languages size={14} />
                 {t.languages}
@@ -206,7 +237,7 @@ export function CVTemplate1({ cvData, customColor = "#2563eb" }: CVTemplate1Prop
 
           {/* Certifications */}
           {cvData.certifications.some((cert) => cert) && (
-            <section>
+            <section style={{ pageBreakInside: 'avoid', breakInside: 'avoid' }}>
               <h2 className="text-sm pb-1 mb-2 flex items-center gap-1" style={{ borderBottom: `2px solid ${colors.primary}` }}>
                 <Award size={14} />
                 {t.certifications}
@@ -229,7 +260,7 @@ export function CVTemplate1({ cvData, customColor = "#2563eb" }: CVTemplate1Prop
             <>
               {cvData.customSections.map((section, index) => (
                 section.title && section.content && (
-                  <section key={index}>
+                  <section key={index} style={{ pageBreakInside: 'avoid', breakInside: 'avoid' }}>
                     <h2 className="text-sm pb-1 mb-2" style={{ borderBottom: `2px solid ${colors.primary}` }}>
                       {section.title}
                     </h2>

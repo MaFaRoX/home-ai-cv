@@ -18,9 +18,24 @@ export function CVTemplate6({ cvData, customColor = "#7c3aed" }: CVTemplate6Prop
   };
 
   return (
-    <div className="bg-white mx-auto shadow-lg" style={{ width: '210mm', height: '297mm', overflow: 'hidden' }}>
+    <div 
+      className="bg-white mx-auto shadow-lg" 
+      style={{ 
+        width: '210mm', 
+        minHeight: '297mm',
+        pageBreakInside: 'avoid',
+        breakInside: 'avoid'
+      }}
+    >
       {/* Elegant Header - Minimal Design */}
-      <div className="px-6 py-6" style={{ background: colors.gradientDiagonal }}>
+      <div 
+        className="px-6 py-6" 
+        style={{ 
+          background: colors.gradientDiagonal,
+          pageBreakAfter: 'avoid',
+          breakAfter: 'avoid'
+        }}
+      >
         <div className="text-center text-white">
           <h1 className="text-4xl mb-2 tracking-wide">{cvData.personalInfo.fullName}</h1>
           <p className="text-lg tracking-wider uppercase" style={{ color: colors.primarySemiLight }}>{cvData.personalInfo.title}</p>
@@ -28,12 +43,19 @@ export function CVTemplate6({ cvData, customColor = "#7c3aed" }: CVTemplate6Prop
       </div>
 
       {/* Two Column Layout - Balanced 1:1 */}
-      <div className="grid grid-cols-2 gap-0" style={{ height: 'calc(297mm - 90px)' }}>
+      <div className="grid grid-cols-2 gap-0">
         {/* Left Sidebar - Contact & Skills */}
-        <div className="px-6 py-6 space-y-5" style={{ background: 'rgb(250, 250, 251)' }}>
+        <div 
+          className="px-6 py-6 space-y-5" 
+          style={{ 
+            background: 'rgb(250, 250, 251)',
+            pageBreakInside: 'avoid',
+            breakInside: 'avoid'
+          }}
+        >
           {/* Photo - Circular */}
           {cvData.personalInfo.photo && (
-            <div className="flex justify-center mb-4">
+            <div className="flex justify-center mb-4" style={{ pageBreakAfter: 'avoid', breakAfter: 'avoid' }}>
               <img
                 src={cvData.personalInfo.photo}
                 alt={cvData.personalInfo.fullName}
@@ -44,7 +66,7 @@ export function CVTemplate6({ cvData, customColor = "#7c3aed" }: CVTemplate6Prop
           )}
 
           {/* Contact Information */}
-          <section>
+          <section style={{ pageBreakInside: 'avoid', breakInside: 'avoid' }}>
             <h2 className="text-base uppercase tracking-wider pb-2 mb-3" style={{ color: colors.primaryMedium, borderBottom: `3px solid ${colors.primary}` }}>
               {t.contact}
             </h2>
@@ -96,7 +118,7 @@ export function CVTemplate6({ cvData, customColor = "#7c3aed" }: CVTemplate6Prop
 
           {/* Technical Skills */}
           {cvData.skills.technical.some((skill) => skill) && (
-            <section>
+            <section style={{ pageBreakInside: 'avoid', breakInside: 'avoid' }}>
               <h2 className="text-base uppercase tracking-wider pb-2 mb-3" style={{ color: colors.primaryMedium, borderBottom: `3px solid ${colors.primary}` }}>
                 {t.technicalSkills}
               </h2>
@@ -114,7 +136,7 @@ export function CVTemplate6({ cvData, customColor = "#7c3aed" }: CVTemplate6Prop
 
           {/* Soft Skills */}
           {cvData.skills.soft.some((skill) => skill) && (
-            <section>
+            <section style={{ pageBreakInside: 'avoid', breakInside: 'avoid' }}>
               <h2 className="text-base uppercase tracking-wider pb-2 mb-3" style={{ color: colors.primaryMedium, borderBottom: `3px solid ${colors.primary}` }}>
                 {t.softSkills}
               </h2>
@@ -133,7 +155,7 @@ export function CVTemplate6({ cvData, customColor = "#7c3aed" }: CVTemplate6Prop
 
           {/* Languages */}
           {cvData.languages.some((lang) => lang.name) && (
-            <section>
+            <section style={{ pageBreakInside: 'avoid', breakInside: 'avoid' }}>
               <h2 className="text-base uppercase tracking-wider pb-2 mb-3 flex items-center gap-2" style={{ color: colors.primaryMedium, borderBottom: `3px solid ${colors.primary}` }}>
                 <Languages size={16} />
                 {t.languages}
@@ -153,7 +175,7 @@ export function CVTemplate6({ cvData, customColor = "#7c3aed" }: CVTemplate6Prop
 
           {/* Certifications */}
           {cvData.certifications.some((cert) => cert) && (
-            <section>
+            <section style={{ pageBreakInside: 'avoid', breakInside: 'avoid' }}>
               <h2 className="text-base uppercase tracking-wider pb-2 mb-3 flex items-center gap-2" style={{ color: colors.primaryMedium, borderBottom: `3px solid ${colors.primary}` }}>
                 <Award size={16} />
                 {t.certifications}
@@ -176,7 +198,7 @@ export function CVTemplate6({ cvData, customColor = "#7c3aed" }: CVTemplate6Prop
             <>
               {cvData.customSections.slice(0, 1).map((section, index) => (
                 section.title && section.content && (
-                  <section key={index}>
+                  <section key={index} style={{ pageBreakInside: 'avoid', breakInside: 'avoid' }}>
                     <h2 className="text-base uppercase tracking-wider pb-2 mb-3" style={{ color: colors.primaryMedium, borderBottom: `3px solid ${colors.primary}` }}>
                       {section.title}
                     </h2>
@@ -194,7 +216,7 @@ export function CVTemplate6({ cvData, customColor = "#7c3aed" }: CVTemplate6Prop
         <div className="px-6 py-6 space-y-5">
           {/* Profile Summary */}
           {cvData.profile && (
-            <section>
+            <section style={{ pageBreakAfter: 'avoid', breakAfter: 'avoid' }}>
               <h2 className="text-lg uppercase tracking-wider pb-2 mb-3" style={{ color: colors.primaryMedium, borderBottom: `3px solid ${colors.primary}` }}>
                 {t.profile}
               </h2>
@@ -213,7 +235,15 @@ export function CVTemplate6({ cvData, customColor = "#7c3aed" }: CVTemplate6Prop
                 {cvData.workExperience
                   .filter((exp) => exp.position || exp.company)
                   .map((job, index) => (
-                    <div key={index} className="relative pl-4" style={{ borderLeft: `2px solid ${colors.primaryLighter}` }}>
+                    <div 
+                      key={index} 
+                      className="relative pl-4" 
+                      style={{ 
+                        borderLeft: `2px solid ${colors.primaryLighter}`,
+                        pageBreakInside: 'avoid',
+                        breakInside: 'avoid'
+                      }}
+                    >
                       <div className="absolute w-2.5 h-2.5 rounded-full -left-[6px] top-1" style={{ background: colors.primary }}></div>
                       <h3 className="text-sm" style={{ color: colors.primaryMedium }}>{job.position}</h3>
                       <p className="text-gray-700 text-xs">
@@ -243,7 +273,15 @@ export function CVTemplate6({ cvData, customColor = "#7c3aed" }: CVTemplate6Prop
                 {cvData.education
                   .filter((edu) => edu.degree || edu.school)
                   .map((edu, index) => (
-                    <div key={index} className="relative pl-4" style={{ borderLeft: `2px solid ${colors.primaryLighter}` }}>
+                    <div 
+                      key={index} 
+                      className="relative pl-4" 
+                      style={{ 
+                        borderLeft: `2px solid ${colors.primaryLighter}`,
+                        pageBreakInside: 'avoid',
+                        breakInside: 'avoid'
+                      }}
+                    >
                       <div className="absolute w-2.5 h-2.5 rounded-full -left-[6px] top-1" style={{ background: colors.primary }}></div>
                       <h3 className="text-sm" style={{ color: colors.primaryMedium }}>{edu.degree}</h3>
                       <p className="text-gray-700 text-xs">{edu.school}</p>
@@ -262,7 +300,7 @@ export function CVTemplate6({ cvData, customColor = "#7c3aed" }: CVTemplate6Prop
             <>
               {cvData.customSections.slice(1).map((section, index) => (
                 section.title && section.content && (
-                  <section key={index}>
+                  <section key={index} style={{ pageBreakInside: 'avoid', breakInside: 'avoid' }}>
                     <h2 className="text-lg uppercase tracking-wider pb-2 mb-3" style={{ color: colors.primaryMedium, borderBottom: `3px solid ${colors.primary}` }}>
                       {section.title}
                     </h2>

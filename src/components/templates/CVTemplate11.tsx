@@ -22,9 +22,10 @@ export function CVTemplate11({ cvData, customColor = "#06b6d4" }: CVTemplate11Pr
       className="mx-auto" 
       style={{ 
         width: '210mm', 
-        height: '297mm', 
-        overflow: 'hidden',
-        backgroundColor: 'rgb(26, 26, 26)'
+        minHeight: '297mm',
+        backgroundColor: 'rgb(26, 26, 26)',
+        pageBreakInside: 'avoid',
+        breakInside: 'avoid'
       }}
     >
       {/* Header Section */}
@@ -32,7 +33,9 @@ export function CVTemplate11({ cvData, customColor = "#06b6d4" }: CVTemplate11Pr
         className="px-8 py-6"
         style={{
           background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.secondary} 100%)`,
-          position: 'relative'
+          position: 'relative',
+          pageBreakAfter: 'avoid',
+          breakAfter: 'avoid'
         }}
       >
         <div className="flex items-center gap-6">
@@ -108,9 +111,16 @@ export function CVTemplate11({ cvData, customColor = "#06b6d4" }: CVTemplate11Pr
       </div>
 
       {/* Main Content */}
-      <div className="flex h-[calc(297mm-140px)]">
+      <div className="flex">
         {/* Left Column */}
-        <div className="w-[38%] p-6 text-white" style={{ backgroundColor: 'rgb(20, 20, 20)' }}>
+        <div 
+          className="w-[38%] p-6 text-white" 
+          style={{ 
+            backgroundColor: 'rgb(20, 20, 20)',
+            pageBreakInside: 'avoid',
+            breakInside: 'avoid'
+          }}
+        >
           {/* Profile */}
           {cvData.profile && (
             <div className="mb-6">
@@ -263,7 +273,9 @@ export function CVTemplate11({ cvData, customColor = "#06b6d4" }: CVTemplate11Pr
                     className="p-3 rounded-lg"
                     style={{ 
                       backgroundColor: 'rgba(255,255,255,0.03)',
-                      borderLeft: `3px solid ${colors.primary}`
+                      borderLeft: `3px solid ${colors.primary}`,
+                      pageBreakInside: 'avoid',
+                      breakInside: 'avoid'
                     }}
                   >
                     <div className="mb-2">
@@ -312,7 +324,9 @@ export function CVTemplate11({ cvData, customColor = "#06b6d4" }: CVTemplate11Pr
                     className="p-3 rounded-lg"
                     style={{ 
                       backgroundColor: 'rgba(255,255,255,0.03)',
-                      borderLeft: `3px solid ${colors.primary}`
+                      borderLeft: `3px solid ${colors.primary}`,
+                      pageBreakInside: 'avoid',
+                      breakInside: 'avoid'
                     }}
                   >
                     <h3 className="text-sm" style={{ color: colors.primary }}>{edu.degree}</h3>

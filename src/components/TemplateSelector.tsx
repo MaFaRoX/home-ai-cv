@@ -151,13 +151,68 @@ export function TemplateSelector({ cvData, onRestrictedAccess }: TemplateSelecto
       const imgWidth = pdfWidth;
       const imgHeight = (img.height * pdfWidth) / img.width;
 
-      // Add image to PDF
+      // Handle multiple pages
       if (imgHeight <= pdfHeight) {
+        // Single page - add image directly
         pdf.addImage(dataUrl, 'PNG', 0, 0, imgWidth, imgHeight);
       } else {
-        // Scale down to fit A4 height
-        const scaledWidth = (img.width * pdfHeight) / img.height;
-        pdf.addImage(dataUrl, 'PNG', 0, 0, scaledWidth, pdfHeight);
+        // Multiple pages - split the image across pages
+        const totalPages = Math.ceil(imgHeight / pdfHeight);
+        const imgWidthPx = img.width;
+        const imgHeightPx = img.height;
+        // Calculate page height in pixels: (PDF page height / total PDF height) * image height in pixels
+        const pageHeightPx = (pdfHeight / imgHeight) * imgHeightPx;
+        
+        // Create a canvas to extract page portions
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        if (!ctx) throw new Error('Could not get canvas context');
+        
+        const sourceImg = new Image();
+        sourceImg.src = dataUrl;
+        
+        await new Promise((resolve, reject) => {
+          sourceImg.onload = () => {
+            try {
+              for (let page = 0; page < totalPages; page++) {
+                if (page > 0) {
+                  pdf.addPage();
+                }
+                
+                const sourceY = page * pageHeightPx;
+                const remainingHeight = imgHeightPx - sourceY;
+                const sourceHeight = Math.min(pageHeightPx, remainingHeight);
+                
+                // Set canvas size for this page
+                canvas.width = imgWidthPx;
+                canvas.height = sourceHeight;
+                
+                // Clear canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw the portion of the image for this page
+                ctx.drawImage(
+                  sourceImg,
+                  0, sourceY, imgWidthPx, sourceHeight,
+                  0, 0, imgWidthPx, sourceHeight
+                );
+                
+                // Convert canvas to data URL
+                const pageDataUrl = canvas.toDataURL('image/png');
+                
+                // Calculate dimensions for PDF (convert pixels to mm)
+                const pageImgHeight = (sourceHeight * pdfWidth) / imgWidthPx;
+                
+                // Add to PDF
+                pdf.addImage(pageDataUrl, 'PNG', 0, 0, pdfWidth, pageImgHeight);
+              }
+              resolve(undefined);
+            } catch (error) {
+              reject(error);
+            }
+          };
+          sourceImg.onerror = reject;
+        });
       }
 
       // Generate safe filename
@@ -479,20 +534,9 @@ export function TemplateSelector({ cvData, onRestrictedAccess }: TemplateSelecto
       <Dialog open={previewTemplate !== null} onOpenChange={() => setPreviewTemplate(null)}>
         <DialogContent className="max-w-[calc(210mm+3rem)] max-h-[95vh] p-0 overflow-hidden w-auto min-w-[calc(210mm+3rem)]">
           <DialogHeader className="p-6 pb-4 border-b">
-            <div className="flex items-center justify-between">
-              <DialogTitle>
-                {t.previewFullscreen}
-              </DialogTitle>
-              <Button
-                onClick={() => setPreviewTemplate(null)}
-                variant="ghost"
-                size="sm"
-                className="gap-2"
-              >
-                <X size={16} />
-                {t.closePreview}
-              </Button>
-            </div>
+            <DialogTitle>
+              {t.previewFullscreen}
+            </DialogTitle>
             <DialogDescription className="sr-only">
               {t.previewFullscreen}
             </DialogDescription>
@@ -512,3 +556,6 @@ export function TemplateSelector({ cvData, onRestrictedAccess }: TemplateSelecto
     </div>
   );
 }
+
+
+

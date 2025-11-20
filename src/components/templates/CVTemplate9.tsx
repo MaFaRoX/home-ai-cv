@@ -18,9 +18,24 @@ export function CVTemplate9({ cvData, customColor = "#4f46e5" }: CVTemplate9Prop
   };
 
   return (
-    <div className="bg-white mx-auto" style={{ width: '210mm', height: '297mm', overflow: 'hidden' }}>
+    <div 
+      className="bg-white mx-auto" 
+      style={{ 
+        width: '210mm', 
+        minHeight: '297mm',
+        pageBreakInside: 'avoid',
+        breakInside: 'avoid'
+      }}
+    >
       {/* Top Section - Full-width Photo with Overlay */}
-      <div className="relative" style={{ height: '95mm' }}>
+      <div 
+        className="relative" 
+        style={{ 
+          height: '95mm',
+          pageBreakAfter: 'avoid',
+          breakAfter: 'avoid'
+        }}
+      >
         {/* Background Pattern/Color */}
         <div className="absolute inset-0" style={{ background: colors.gradientDiagonal }}></div>
         
@@ -102,7 +117,7 @@ export function CVTemplate9({ cvData, customColor = "#4f46e5" }: CVTemplate9Prop
       </div>
 
       {/* Bottom Section - Masonry-style Grid */}
-      <div className="px-8 py-6" style={{ height: '202mm' }}>
+      <div className="px-8 py-6">
         {/* Profile Summary - Full Width */}
         {cvData.profile && (
           <div className="mb-5 p-4 rounded-lg" style={{ background: colors.primaryVeryLight }}>
@@ -126,7 +141,16 @@ export function CVTemplate9({ cvData, customColor = "#4f46e5" }: CVTemplate9Prop
                   {cvData.workExperience
                     .filter((exp) => exp.position || exp.company)
                     .map((job, index) => (
-                      <div key={index} className="p-3 rounded-lg border-l-4" style={{ borderColor: colors.primary, background: '#f9fafb' }}>
+                      <div 
+                        key={index} 
+                        className="p-3 rounded-lg border-l-4" 
+                        style={{ 
+                          borderColor: colors.primary, 
+                          background: '#f9fafb',
+                          pageBreakInside: 'avoid',
+                          breakInside: 'avoid'
+                        }}
+                      >
                         <h3 className="text-sm" style={{ color: colors.primaryDark }}>{job.position}</h3>
                         <p className="text-xs text-gray-600 mb-1">
                           {job.company}
@@ -155,7 +179,16 @@ export function CVTemplate9({ cvData, customColor = "#4f46e5" }: CVTemplate9Prop
                   {cvData.education
                     .filter((edu) => edu.degree || edu.school)
                     .map((edu, index) => (
-                      <div key={index} className="p-3 rounded-lg border-l-4" style={{ borderColor: colors.primary, background: '#f9fafb' }}>
+                      <div 
+                        key={index} 
+                        className="p-3 rounded-lg border-l-4" 
+                        style={{ 
+                          borderColor: colors.primary, 
+                          background: '#f9fafb',
+                          pageBreakInside: 'avoid',
+                          breakInside: 'avoid'
+                        }}
+                      >
                         <h3 className="text-sm" style={{ color: colors.primaryDark }}>{edu.degree}</h3>
                         <p className="text-xs text-gray-600 mb-1">{edu.school}</p>
                         <p className="text-xs mb-1" style={{ color: colors.primary }}>
@@ -175,7 +208,14 @@ export function CVTemplate9({ cvData, customColor = "#4f46e5" }: CVTemplate9Prop
           <div className="col-span-2 space-y-5">
             {/* Technical Skills */}
             {cvData.skills.technical.some((skill) => skill) && (
-              <section className="p-4 rounded-lg" style={{ background: colors.primaryVeryLight }}>
+              <section 
+                className="p-4 rounded-lg" 
+                style={{ 
+                  background: colors.primaryVeryLight,
+                  pageBreakInside: 'avoid',
+                  breakInside: 'avoid'
+                }}
+              >
                 <h2 className="text-sm mb-3" style={{ color: colors.primaryDark }}>{t.technicalSkills}</h2>
                 <div className="flex flex-wrap gap-1.5">
                   {cvData.skills.technical
@@ -191,7 +231,14 @@ export function CVTemplate9({ cvData, customColor = "#4f46e5" }: CVTemplate9Prop
 
             {/* Soft Skills */}
             {cvData.skills.soft.some((skill) => skill) && (
-              <section className="p-4 rounded-lg" style={{ background: colors.primaryVeryLight }}>
+              <section 
+                className="p-4 rounded-lg" 
+                style={{ 
+                  background: colors.primaryVeryLight,
+                  pageBreakInside: 'avoid',
+                  breakInside: 'avoid'
+                }}
+              >
                 <h2 className="text-sm mb-3" style={{ color: colors.primaryDark }}>{t.softSkills}</h2>
                 <ul className="space-y-1.5">
                   {cvData.skills.soft
@@ -208,7 +255,14 @@ export function CVTemplate9({ cvData, customColor = "#4f46e5" }: CVTemplate9Prop
 
             {/* Languages */}
             {cvData.languages.some((lang) => lang.name) && (
-              <section className="p-4 rounded-lg" style={{ background: colors.primaryVeryLight }}>
+              <section 
+                className="p-4 rounded-lg" 
+                style={{ 
+                  background: colors.primaryVeryLight,
+                  pageBreakInside: 'avoid',
+                  breakInside: 'avoid'
+                }}
+              >
                 <h2 className="text-sm mb-3 flex items-center gap-1.5" style={{ color: colors.primaryDark }}>
                   <Languages size={16} />
                   {t.languages}
@@ -228,7 +282,14 @@ export function CVTemplate9({ cvData, customColor = "#4f46e5" }: CVTemplate9Prop
 
             {/* Certifications */}
             {cvData.certifications.some((cert) => cert) && (
-              <section className="p-4 rounded-lg" style={{ background: colors.primaryVeryLight }}>
+              <section 
+                className="p-4 rounded-lg" 
+                style={{ 
+                  background: colors.primaryVeryLight,
+                  pageBreakInside: 'avoid',
+                  breakInside: 'avoid'
+                }}
+              >
                 <h2 className="text-sm mb-3 flex items-center gap-1.5" style={{ color: colors.primaryDark }}>
                   <Award size={16} />
                   {t.certifications}
@@ -251,7 +312,15 @@ export function CVTemplate9({ cvData, customColor = "#4f46e5" }: CVTemplate9Prop
               <>
                 {cvData.customSections.map((section, index) => (
                   section.title && section.content && (
-                    <section key={index} className="p-4 rounded-lg" style={{ background: colors.primaryVeryLight }}>
+                    <section 
+                      key={index} 
+                      className="p-4 rounded-lg" 
+                      style={{ 
+                        background: colors.primaryVeryLight,
+                        pageBreakInside: 'avoid',
+                        breakInside: 'avoid'
+                      }}
+                    >
                       <h2 className="text-sm mb-2" style={{ color: colors.primaryDark }}>
                         {section.title}
                       </h2>

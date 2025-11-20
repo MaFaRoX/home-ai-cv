@@ -22,12 +22,13 @@ export function CVTemplate12({ cvData, customColor = "#8b5cf6" }: CVTemplate12Pr
       className="mx-auto text-white" 
       style={{ 
         width: '210mm', 
-        height: '297mm', 
-        overflow: 'hidden',
-        background: 'linear-gradient(135deg, rgb(15, 10, 25) 0%, rgb(20, 15, 30) 50%, rgb(25, 15, 35) 100%)'
+        minHeight: '297mm',
+        background: 'linear-gradient(135deg, rgb(15, 10, 25) 0%, rgb(20, 15, 30) 50%, rgb(25, 15, 35) 100%)',
+        pageBreakInside: 'avoid',
+        breakInside: 'avoid'
       }}
     >
-      <div className="flex h-full">
+      <div className="flex">
         {/* Left Content - Main */}
         <div className="flex-1 p-7">
           {/* Header */}
@@ -123,7 +124,11 @@ export function CVTemplate12({ cvData, customColor = "#8b5cf6" }: CVTemplate12Pr
                   <div 
                     key={index}
                     className="relative pl-4 pb-4"
-                    style={{ borderLeft: `2px solid ${colors.primary}30` }}
+                    style={{ 
+                      borderLeft: `2px solid ${colors.primary}30`,
+                      pageBreakInside: 'avoid',
+                      breakInside: 'avoid'
+                    }}
                   >
                     <div 
                       className="absolute left-0 top-1.5 w-3 h-3 rounded-full"
@@ -183,7 +188,11 @@ export function CVTemplate12({ cvData, customColor = "#8b5cf6" }: CVTemplate12Pr
                   <div 
                     key={index}
                     className="relative pl-4"
-                    style={{ borderLeft: `2px solid ${colors.primary}30` }}
+                    style={{ 
+                      borderLeft: `2px solid ${colors.primary}30`,
+                      pageBreakInside: 'avoid',
+                      breakInside: 'avoid'
+                    }}
                   >
                     <div 
                       className="absolute left-0 top-1.5 w-3 h-3 rounded-full"
@@ -240,7 +249,9 @@ export function CVTemplate12({ cvData, customColor = "#8b5cf6" }: CVTemplate12Pr
           style={{
             background: `linear-gradient(180deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.1) 100%)`,
             backdropFilter: 'blur(10px)',
-            borderLeft: `1px solid ${colors.primary}30`
+            borderLeft: `1px solid ${colors.primary}30`,
+            pageBreakInside: 'avoid',
+            breakInside: 'avoid'
           }}
         >
           {/* Photo */}

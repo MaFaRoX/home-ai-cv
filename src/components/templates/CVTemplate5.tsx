@@ -18,9 +18,24 @@ export function CVTemplate5({ cvData, customColor = "#0891b2" }: CVTemplate5Prop
   };
 
   return (
-    <div className="bg-white mx-auto shadow-lg" style={{ width: '210mm', height: '297mm', overflow: 'hidden' }}>
+    <div 
+      className="bg-white mx-auto shadow-lg" 
+      style={{ 
+        width: '210mm', 
+        minHeight: '297mm',
+        pageBreakInside: 'avoid',
+        breakInside: 'avoid'
+      }}
+    >
       {/* Header with Modern Design */}
-      <div className="text-white px-6 py-5" style={{ background: colors.gradient }}>
+      <div 
+        className="text-white px-6 py-5" 
+        style={{ 
+          background: colors.gradient,
+          pageBreakAfter: 'avoid',
+          breakAfter: 'avoid'
+        }}
+      >
         <div className="flex items-start gap-5">
           {/* Photo */}
           {cvData.personalInfo.photo && (
@@ -107,7 +122,11 @@ export function CVTemplate5({ cvData, customColor = "#0891b2" }: CVTemplate5Prop
                 {cvData.workExperience
                   .filter((exp) => exp.position || exp.company)
                   .map((job, index) => (
-                    <div key={index} className="border-l-2 border-gray-200 pl-3">
+                    <div 
+                      key={index} 
+                      className="border-l-2 border-gray-200 pl-3"
+                      style={{ pageBreakInside: 'avoid', breakInside: 'avoid' }}
+                    >
                       <h3 className="text-sm" style={{ color: colors.secondary }}>{job.position}</h3>
                       <p className="text-gray-700 text-xs">
                         {job.company}
@@ -133,7 +152,11 @@ export function CVTemplate5({ cvData, customColor = "#0891b2" }: CVTemplate5Prop
                 {cvData.education
                   .filter((edu) => edu.degree || edu.school)
                   .map((edu, index) => (
-                    <div key={index} className="border-l-2 border-gray-200 pl-3">
+                    <div 
+                      key={index} 
+                      className="border-l-2 border-gray-200 pl-3"
+                      style={{ pageBreakInside: 'avoid', breakInside: 'avoid' }}
+                    >
                       <h3 className="text-sm" style={{ color: colors.secondary }}>{edu.degree}</h3>
                       <p className="text-gray-700 text-xs">{edu.school}</p>
                       <p className="text-[10px] text-gray-500">
@@ -151,7 +174,7 @@ export function CVTemplate5({ cvData, customColor = "#0891b2" }: CVTemplate5Prop
         <div className="space-y-4">
           {/* Technical Skills */}
           {cvData.skills.technical.some((skill) => skill) && (
-            <section>
+            <section style={{ pageBreakInside: 'avoid', breakInside: 'avoid' }}>
               <h2 className="text-sm pb-1 mb-2" style={{ color: colors.secondary, borderBottom: `2px solid ${colors.secondary}` }}>{t.technicalSkills.toUpperCase()}</h2>
               <div className="flex flex-wrap gap-1">
                 {cvData.skills.technical
@@ -167,7 +190,7 @@ export function CVTemplate5({ cvData, customColor = "#0891b2" }: CVTemplate5Prop
 
           {/* Soft Skills */}
           {cvData.skills.soft.some((skill) => skill) && (
-            <section>
+            <section style={{ pageBreakInside: 'avoid', breakInside: 'avoid' }}>
               <h2 className="text-sm pb-1 mb-2" style={{ color: colors.secondary, borderBottom: `2px solid ${colors.secondary}` }}>{t.softSkills.toUpperCase()}</h2>
               <ul className="space-y-0.5">
                 {cvData.skills.soft
@@ -184,7 +207,7 @@ export function CVTemplate5({ cvData, customColor = "#0891b2" }: CVTemplate5Prop
 
           {/* Languages */}
           {cvData.languages.some((lang) => lang.name) && (
-            <section>
+            <section style={{ pageBreakInside: 'avoid', breakInside: 'avoid' }}>
               <h2 className="text-sm pb-1 mb-2" style={{ color: colors.secondary, borderBottom: `2px solid ${colors.secondary}` }}>{t.languages.toUpperCase()}</h2>
               <div className="space-y-1.5">
                 {cvData.languages
@@ -201,7 +224,7 @@ export function CVTemplate5({ cvData, customColor = "#0891b2" }: CVTemplate5Prop
 
           {/* Certifications */}
           {cvData.certifications.some((cert) => cert) && (
-            <section>
+            <section style={{ pageBreakInside: 'avoid', breakInside: 'avoid' }}>
               <h2 className="text-sm pb-1 mb-2" style={{ color: colors.secondary, borderBottom: `2px solid ${colors.secondary}` }}>{t.certifications.toUpperCase()}</h2>
               <ul className="space-y-1">
                 {cvData.certifications
@@ -221,7 +244,7 @@ export function CVTemplate5({ cvData, customColor = "#0891b2" }: CVTemplate5Prop
             <>
               {cvData.customSections.map((section, index) => (
                 section.title && section.content && (
-                  <section key={index}>
+                  <section key={index} style={{ pageBreakInside: 'avoid', breakInside: 'avoid' }}>
                     <h2 className="text-base pb-1 mb-2" style={{ color: colors.primaryMedium, borderBottom: `2px solid ${colors.secondary}` }}>
                       {section.title}
                     </h2>
