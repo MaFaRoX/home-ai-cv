@@ -262,9 +262,6 @@ export function TemplateSelector({ cvData, onRestrictedAccess }: TemplateSelecto
               <div className="flex items-center gap-2 flex-wrap">
                 <Palette className="text-purple-600 dark:text-purple-400" size={20} />
                 <h3 className="font-semibold text-gray-900 dark:text-gray-100">{t.customizeColors}</h3>
-                <span className="text-sm text-gray-600 dark:text-gray-400">
-                  - {templates.find(t => t.id === selectedTemplate)?.name}
-                </span>
               </div>
               <div className="flex gap-2">
                 <Button
@@ -362,16 +359,6 @@ export function TemplateSelector({ cvData, onRestrictedAccess }: TemplateSelecto
                 </div>
               )}
 
-              {/* Template Name Badge */}
-              <div className={`absolute top-3 left-3 z-10 px-3 py-1.5 rounded-lg shadow-md border-2 transition-all ${
-                isRestricted
-                  ? "bg-gray-400 text-white border-gray-500"
-                  : selectedTemplate === template.id
-                  ? "bg-blue-600 text-white border-blue-700"
-                  : "bg-white/95 backdrop-blur-sm border-gray-200 group-hover:border-gray-300"
-              }`}>
-                <span className="text-sm">{template.name}</span>
-              </div>
 
               {/* Action Buttons */}
               {!isRestricted && (
@@ -494,7 +481,7 @@ export function TemplateSelector({ cvData, onRestrictedAccess }: TemplateSelecto
           <DialogHeader className="p-6 pb-4 border-b">
             <div className="flex items-center justify-between">
               <DialogTitle>
-                {previewTemplate && templates.find(t => t.id === previewTemplate)?.name}
+                {t.previewFullscreen}
               </DialogTitle>
               <Button
                 onClick={() => setPreviewTemplate(null)}
