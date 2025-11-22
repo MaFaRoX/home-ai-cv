@@ -165,8 +165,6 @@ export function TemplateSelector({ cvData, onRestrictedAccess }: TemplateSelecto
         pixelRatio: 2,
         backgroundColor: '#ffffff',
         cacheBust: true,
-        useCORS: true,
-        allowTaint: false,
       });
 
       if (!dataUrl || dataUrl.length < 100) {
