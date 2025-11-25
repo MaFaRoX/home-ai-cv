@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
@@ -22,6 +22,7 @@ export function CVForm({ onSubmit, initialData, onRestrictedAccess, currentCVId 
   const { isPremium, accessToken } = useAuth();
   const [showCropper, setShowCropper] = useState(false);
   const [imageToCrop, setImageToCrop] = useState<string>("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState<CVData>(
     initialData || {
       personalInfo: {
@@ -137,6 +138,10 @@ export function CVForm({ onSubmit, initialData, onRestrictedAccess, currentCVId 
         photo: croppedImage,
       },
     });
+    // Reset file input to allow uploading again
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
     toast.success("Photo cropped and added successfully");
   };
 
@@ -311,36 +316,42 @@ export function CVForm({ onSubmit, initialData, onRestrictedAccess, currentCVId 
                   <label className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg cursor-pointer hover:bg-blue-100 transition-colors w-fit">
                     <Upload size={18} />
                     <span>{t.uploadPhoto}</span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handlePhotoUpload}
-                      className="hidden"
-                    />
+                     <input
+                       ref={fileInputRef}
+                       type="file"
+                       accept="image/*"
+                       onChange={handlePhotoUpload}
+                       className="hidden"
+                     />
                   </label>
                   {formData.personalInfo.photo && (
                     <Button
                       type="button"
                       variant="outline"
                       size="sm"
-                      onClick={() => {
-                        // Remove from form data
-                        setFormData({
-                          ...formData,
-                          personalInfo: {
-                            ...formData.personalInfo,
-                            photo: "",
-                          },
-                        });
-                        
-                        // Also remove from localStorage
-                        if (typeof window !== 'undefined') {
-                          const photoKey = currentCVId ? `cv-online-photo-${currentCVId}` : 'cv-online-guest-photo';
-                          localStorage.removeItem(photoKey);
-                        }
-                        
-                        toast.success("Photo removed");
-                      }}
+                       onClick={() => {
+                         // Remove from form data
+                         setFormData({
+                           ...formData,
+                           personalInfo: {
+                             ...formData.personalInfo,
+                             photo: "",
+                           },
+                         });
+                         
+                         // Also remove from localStorage
+                         if (typeof window !== 'undefined') {
+                           const photoKey = currentCVId ? `cv-online-photo-${currentCVId}` : 'cv-online-guest-photo';
+                           localStorage.removeItem(photoKey);
+                         }
+                         
+                         // Reset file input to allow uploading again
+                         if (fileInputRef.current) {
+                           fileInputRef.current.value = '';
+                         }
+                         
+                         toast.success("Photo removed");
+                       }}
                       className="gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
                     >
                       <Trash2 size={16} />
@@ -1105,13 +1116,19 @@ export function CVForm({ onSubmit, initialData, onRestrictedAccess, currentCVId 
         </Button>
       </div>
 
-      {/* Photo Cropper Dialog */}
-      <PhotoCropperDialog
-        open={showCropper}
-        onOpenChange={setShowCropper}
-        imageSrc={imageToCrop}
-        onCropComplete={handleCropComplete}
-      />
+       {/* Photo Cropper Dialog */}
+       <PhotoCropperDialog
+         open={showCropper}
+         onOpenChange={(isOpen) => {
+           setShowCropper(isOpen);
+           // Reset file input when dialog is closed without saving
+           if (!isOpen && fileInputRef.current) {
+             fileInputRef.current.value = '';
+           }
+         }}
+         imageSrc={imageToCrop}
+         onCropComplete={handleCropComplete}
+       />
     </form>
   );
 }

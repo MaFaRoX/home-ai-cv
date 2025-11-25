@@ -171,13 +171,8 @@ export function PhotoCropperDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={(isOpen) => {
-      // Prevent closing dialog - cropping is mandatory
-      if (!isOpen) {
-        toast.error("Please crop and save the photo to continue");
-      }
-    }}>
-      <DialogContent className="max-w-2xl w-full p-0" onInteractOutside={(e) => e.preventDefault()}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-2xl w-full p-0">
         <DialogHeader className="px-6 pt-6 pb-4">
           <DialogTitle>Crop Your Photo</DialogTitle>
         </DialogHeader>
@@ -228,10 +223,20 @@ export function PhotoCropperDialog({
           </div>
         </div>
         <DialogFooter className="px-6 pb-6">
+          <Button variant="outline" onClick={() => {
+            onOpenChange(false);
+            // Reset state
+            setCrop({ x: 0, y: 0 });
+            setZoom(1);
+            setRotation(0);
+            setCroppedAreaPixels(null);
+          }}>
+            Cancel
+          </Button>
           <Button 
             onClick={handleSave} 
             disabled={!croppedAreaPixels}
-            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 w-full sm:w-auto"
+            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
           >
             Save Cropped Photo
           </Button>
